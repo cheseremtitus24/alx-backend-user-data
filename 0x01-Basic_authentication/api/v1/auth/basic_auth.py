@@ -13,11 +13,13 @@ class BasicAuth(Auth):
     """
     Basic Authentication class that uses Base64 encoding
     """
+
     def __init__(self) -> None:
         """Call to parent class to prevent overriding of initialization function"""
         super().__init__()
 
-    def extract_base64_authorization_header(self, authorization_header: str) -> str:
+    def extract_base64_authorization_header(
+            self, authorization_header: str) -> str:
         """Extracts a base64 encode('username:password') that follows Basic and returns"""
         if not authorization_header:
             return None
@@ -27,7 +29,8 @@ class BasicAuth(Auth):
             return None
         return authorization_header.split(" ", 1)[1]
 
-    def decode_base64_authorization_header(self, base64_authorization_header: str) -> str:
+    def decode_base64_authorization_header(
+            self, base64_authorization_header: str) -> str:
         """Decodes a base64 encoded string and returns a utf-8 compatible string"""
         decoded_string = None
         if not base64_authorization_header:
@@ -36,12 +39,13 @@ class BasicAuth(Auth):
             return None
         try:
             decoded_string = base64.b64decode(base64_authorization_header)
-        except:
+        except BaseException:
             return None
         else:
             return decoded_string.decode('utf-8')
 
-    def extract_user_credentials(self, decoded_base64_authorization_header: str) -> (str, str):
+    def extract_user_credentials(
+            self, decoded_base64_authorization_header: str) -> (str, str):
         """extracts and returns username & password delimited by a colon"""
         if not decoded_base64_authorization_header:
             return None, None
@@ -52,7 +56,10 @@ class BasicAuth(Auth):
         username, password = decoded_base64_authorization_header.split(':', 1)
         return username, password
 
-    def user_object_from_credentials(self, user_email: str, user_pwd: str) -> TypeVar('User'):
+    def user_object_from_credentials(
+            self,
+            user_email: str,
+            user_pwd: str) -> TypeVar('User'):
         """checks that username exists and that password is valid then returns the User object to caller"""
         if user_email is None or not isinstance(user_email, str):
             return None
