@@ -38,11 +38,12 @@ class BasicAuth(Auth):
         if type(base64_authorization_header) not in [str]:
             return None
         try:
-            decoded_string = base64.b64decode(base64_authorization_header)
+            decoded_string = base64.b64decode(
+                base64_authorization_header).decode('utf-8')
         except BaseException:
             return None
         else:
-            return decoded_string.decode('utf-8')
+            return decoded_string
 
     def extract_user_credentials(
             self, decoded_base64_authorization_header: str) -> (str, str):
