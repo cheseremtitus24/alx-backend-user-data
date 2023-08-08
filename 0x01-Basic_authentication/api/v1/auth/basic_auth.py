@@ -15,12 +15,14 @@ class BasicAuth(Auth):
     """
 
     def __init__(self) -> None:
-        """Call to parent class to prevent overriding of initialization function"""
+        """Call to parent class to prevent overriding
+          of initialization function"""
         super().__init__()
 
     def extract_base64_authorization_header(
             self, authorization_header: str) -> str:
-        """Extracts a base64 encode('username:password') that follows Basic and returns"""
+        """Extracts a base64 encode('username:password')
+          that follows Basic and returns"""
         if not authorization_header:
             return None
         if type(authorization_header) not in [str]:
@@ -31,7 +33,8 @@ class BasicAuth(Auth):
 
     def decode_base64_authorization_header(
             self, base64_authorization_header: str) -> str:
-        """Decodes a base64 encoded string and returns a utf-8 compatible string"""
+        """Decodes a base64 encoded string
+          and returns a utf-8 compatible string"""
         decoded_string = None
         if not base64_authorization_header:
             return None
@@ -61,7 +64,8 @@ class BasicAuth(Auth):
             self,
             user_email: str,
             user_pwd: str) -> TypeVar('User'):
-        """checks that username exists and that password is valid then returns the User object to caller"""
+        """checks that username exists and that password
+          is valid then returns the User object to caller"""
         if user_email is None or not isinstance(user_email, str):
             return None
         if user_pwd is None or not isinstance(user_pwd, str):
@@ -78,12 +82,16 @@ class BasicAuth(Auth):
         return None
 
     def current_user(self, request=None) -> TypeVar('User'):
-        """Overload Auth and retrieves the User instance for a request
-        and performs decoding of base64 encoded string in the header
+        """Overload Auth and retrieves the User
+        instance for a request
+        and performs decoding of base64 encoded
+        string in the header
         extractions username and password
          checks validity of the username
-          checks validity of the password and performs matching
-           finally returns  user Object to calling Function"""
+          checks validity of the password and
+          performs matching
+           finally returns  user Object to
+             calling Function"""
         header = self.authorization_header(request)
 
         if not header:
