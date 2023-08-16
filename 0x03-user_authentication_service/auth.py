@@ -71,8 +71,6 @@ class Auth:
             # print(type(string_hashed_password))
             new_user = self._db.add_user(email, string_hashed_password)
             return new_user
-        except BaseException:
-            raise ValueError(f"User {email} already exists")
         else:
             # Reject User Creation as perhaps user already exists or
             # other exception occurred.
