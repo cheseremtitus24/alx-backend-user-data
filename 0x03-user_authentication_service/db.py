@@ -36,21 +36,22 @@ class DB:
         Add new user
         :param email: Unique User's email
         :type email: string
-        :param password: User's login password
-        :type password: string
+        :param hashed_password: User's login password
+        :type hashed_password: string
         :return: User object
         :rtype: User
         """
         if not email or not hashed_password:
             return None
-        new_user = User(email=f"{email}", hashed_password=f"{hashed_password}")
+        new_user = User(email=email, hashed_password=hashed_password)
         self._session.add(new_user)
         self.save()
         return new_user
 
         # Before adding new user verify that user does not already exist
         # try:
-        #     # Raises ``sqlalchemy.orm.exc.NoResultFound`` if the query selects
+        #     #Raises ``sqlalchemy.orm.exc.NoResultFound`` if the
+        #     #query selects
         #     #         no rows.
         #     result = self.find_user_by(email=email)
         # except NoResultFound as e:
