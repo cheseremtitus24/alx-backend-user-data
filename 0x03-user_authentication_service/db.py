@@ -44,6 +44,10 @@ class DB:
         if not email or not hashed_password:
             return None
         new_user = User(email=f"{email}", hashed_password=f"{hashed_password}")
+        self._session.add(new_user)
+        self.save()
+        return new_user
+
         # Before adding new user verify that user does not already exist
         try:
             # Raises ``sqlalchemy.orm.exc.NoResultFound`` if the query selects
