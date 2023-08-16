@@ -78,17 +78,17 @@ class DB:
 
         return result
 
-    def update_user(self, id, **kwargs) -> None:
+    def update_user(self, user_id, **kwargs) -> None:
         """
        Updates User Instance Objects
-        :param id: user_id
-        :type id: integer
+        :param user_id: user_id
+        :type user_id: integer
         :param kwargs: key Value pairs to be updated
         :type kwargs: dict
         :return: None
         :rtype: None
         """
-        find_user = self.find_user_by(id=id)
+        find_user = self.find_user_by(id=user_id)
 
         # Check if all keys in kwargs are in the class dictionary
         user_keys = set(User.__dict__.keys())
