@@ -88,10 +88,7 @@ class DB:
         :return: None
         :rtype: None
         """
-        try:
-            find_user = self.find_user_by(id=user_id)
-        except BaseException:
-            raise ValueError()
+        find_user = self.find_user_by(id=user_id)
 
         # Check if all keys in kwargs are in the class dictionary
         user_keys = set(User.__dict__.keys())
