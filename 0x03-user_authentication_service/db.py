@@ -31,17 +31,17 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, password: str) -> User:
+    def add_user(self, email: str, hashed_password: str) -> User:
         """
         Add new user
         :param email: Unique User's email
         :type email: string
-        :param password: User's login password
-        :type password: string
+        :param hashed_password: User's login password
+        :type hashed_password: string
         :return: User object
         :rtype: User
         """
-        new_user = User(email=f"{email}", hashed_password=f"{password}")
+        new_user = User(email=f"{email}", hashed_password=f"{hashed_password}")
         self._session.add(new_user)
         self.save()
         return new_user
