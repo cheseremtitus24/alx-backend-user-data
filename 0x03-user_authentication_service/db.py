@@ -41,6 +41,8 @@ class DB:
         :return: User object
         :rtype: User
         """
+        if not email or not password:
+            return None
         new_user = User(email=f"{email}", hashed_password=f"{password}")
         self._session.add(new_user)
         self.save()
