@@ -23,10 +23,9 @@ def _hash_password(password: str) -> bytes:
     :return: hashed password
     :rtype: bytes
     """
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    # salt = bcrypt.gensalt()
-    # bytes_hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-    # return bytes_hashed_password
+    salt = bcrypt.gensalt()
+    bytes_hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return bytes_hashed_password
 
 
 def _generate_uuid() -> str:
