@@ -57,8 +57,8 @@ class DB:
             # Reject User Creation as perhaps user already exists or
             # other exception occurred.
             raise ValueError(f"User {email} already exists")
-
-        return new_user
+        finally:
+            return new_user
 
     def save(self) -> None:
         """
