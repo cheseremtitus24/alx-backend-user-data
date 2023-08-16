@@ -62,7 +62,6 @@ class Auth:
             # Raises ``sqlalchemy.orm.exc.NoResultFound`` if the query selects
             #         no rows.
             result = self._db.find_user_by(email=email)
-            raise ValueError(f"User {email} already exists")
         except NoResultFound as e:
             # Clear to register a new User
             # hash their password
@@ -72,7 +71,12 @@ class Auth:
             # print(type(string_hashed_password))
             new_user = self._db.add_user(email, string_hashed_password)
             return new_user
-
+        except BaseException:
+            raise ValueError(f"User {email} already exists")
+        else:
+            # Reject User Creation as perhaps user already exists or
+            # other exception occurred.
+            raise ValueError(f"User {email} already exists")
 
     def valid_login(self, email: str, password: str) -> bool:
         """
