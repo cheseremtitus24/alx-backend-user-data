@@ -2,7 +2,7 @@
 """DB module
 """
 from sqlalchemy import create_engine
-from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.exc import InvalidRequestError, NoResultFound
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
@@ -44,8 +44,20 @@ class DB:
         if not email or not password:
             return None
         new_user = User(email=f"{email}", hashed_password=f"{password}")
-        self._session.add(new_user)
-        self.save()
+        # Before adding new user verify that user does not already exist
+        try:
+            # Raises ``sqlalchemy.orm.exc.NoResultFound`` if the query selects
+            #         no rows.
+            result = self._db.find_user_by(email=email)
+        except NoResultFound as e:
+            # User Does not already exist therefore it's safe to add
+            self._session.add(new_user)
+            self.save()
+        else:
+            # Reject User Creation as perhaps user already exists or
+            # other exception occurred.
+            raise ValueError(f"User {email} already exists")
+
         return new_user
 
     def save(self) -> None:
