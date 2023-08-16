@@ -5,7 +5,8 @@ user authentication System.
 # secure by using sessions atop cookies to
 make it more secure.
 """
-from flask import Flask, jsonify, request, abort, make_response, redirect, url_for
+from flask import Flask, jsonify,\
+    request, abort, make_response, redirect, url_for
 from auth import Auth
 
 AUTH = Auth()
@@ -27,7 +28,8 @@ def index():
 def add_user():
     """
     This is the Add a new User route endpoint.
-    curl -XPOST localhost:5000/users -d 'email=bob@bob.com' -d 'password=mySuperPwd'
+    curl -XPOST localhost:5000/users -d
+    'email=bob@bob.com' -d 'password=mySuperPwd'
 
    {"email":f"{email}", "message":"user created"}
 
@@ -58,7 +60,8 @@ def add_user():
 def login():
     """
     This is the Login route endpoint.
-    curl -XPOST localhost:5000/sessions -d 'email=bob@bob.com' -d 'password=mySuperPwd' -v
+    curl -XPOST localhost:5000/sessions -d 'email=bob@bob.com'
+     -d 'password=mySuperPwd' -v
     -- sets cookie and prints it.
 
     :return: json dictionary
@@ -99,7 +102,8 @@ def logout():
     This is the Logout route endpoint.
     Destroys set cookies then redirects to '/'
     # Use cookie retrieved from the Login command:
-    curl --cookie "session_id=e60637cf-8d00-45d1-82bd-c9030ffa3e77" -XDELETE localhost:5000/sessions -v
+    curl --cookie "session_id=e60637cf-8d00-45d1-82bd-c9030ffa3e77"
+     -XDELETE localhost:5000/sessions -v
 
     :return: json dictionary
     :rtype: dict
@@ -128,7 +132,8 @@ def profile():
     Retrieves set cookies then returns
     User's email attached to this session Cookie
 
-    curl -XGET localhost:5000/profile --cookie "session_id=75c89af8-1729-44d9-a592-41b5e59de9a1"
+    curl -XGET localhost:5000/profile --cookie
+     "session_id=75c89af8-1729-44d9-a592-41b5e59de9a1"
     {"email": "bob@bob.com"}
 
     :return: json dictionary
@@ -161,7 +166,8 @@ def reset_password():
 
     Sets a reset cookie and displays it in the response
 
-   curl -XPOST localhost:5000/sessions -d 'email=bob@bob.com' -d 'password=mySuperPwd' -v
+   curl -XPOST localhost:5000/sessions -d 'email=bob@bob.com'
+    -d 'password=mySuperPwd' -v
     -- sets cookie and prints it.
     {"email": f"{email}", "reset_token": f"{reset_token}"}
 
@@ -191,7 +197,9 @@ def reset_password():
 def update_password():
     """
     Uses form post reset_token to be used to update the user password
-   curl -XPUT localhost:5000/reset_password -d 'email=bob@bob.com' -d 'new_password=mySuperPwd' -d 'reset_token=75c89af8-1729-44d9-a592-41b5e59de9a1' -v
+   curl -XPUT localhost:5000/reset_password -d 'email=bob@bob.com'
+    -d 'new_password=mySuperPwd' -d
+    'reset_token=75c89af8-1729-44d9-a592-41b5e59de9a1' -v
    {"email": f"{email}", "message": "Password updated"}
     :return:
     :rtype:
