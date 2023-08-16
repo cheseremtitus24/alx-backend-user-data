@@ -8,8 +8,6 @@ handling using a primitive cookie setting.
 requires bcrypt installed with :
 pip install bcrypt
 """
-import base64
-import binascii
 import uuid
 import bcrypt
 from sqlalchemy.exc import NoResultFound
