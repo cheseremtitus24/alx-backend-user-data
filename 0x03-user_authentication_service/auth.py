@@ -42,6 +42,7 @@ class Auth:
     """
 
     def __init__(self):
+        """Initialize Auth class"""
         self._db = DB()
 
     def register_user(self, email: str, password: str) -> User:
