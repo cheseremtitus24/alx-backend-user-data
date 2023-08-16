@@ -9,10 +9,8 @@ requires bcrypt installed with :
 pip install bcrypt
 """
 import uuid
-
 import bcrypt
 from sqlalchemy.exc import NoResultFound
-
 from db import DB
 from user import User
 
