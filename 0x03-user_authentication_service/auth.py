@@ -113,7 +113,8 @@ class Auth:
 
     def create_session(self, email: str) -> str:
         """
-        creates a uniquely generated session string then updates user's object instance
+        creates a uniquely generated session string then
+         updates user's object instance
 
         :param email: user's login email
         :type email: string
