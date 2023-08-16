@@ -48,11 +48,15 @@ class DB:
         try:
             # Raises ``sqlalchemy.orm.exc.NoResultFound`` if the query selects
             #         no rows.
-            result = self._db.find_user_by(email=email)
+            result = self.find_user_by(email=email)
         except NoResultFound as e:
             # User Does not already exist therefore it's safe to add
             self._session.add(new_user)
             self.save()
+        else:
+            # Reject User Creation as perhaps user already exists or
+            # other exception occurred.
+            raise ValueError(f"User {result.email} already exists")
         finally:
             return new_user
 
