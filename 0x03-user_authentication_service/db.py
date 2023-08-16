@@ -2,7 +2,7 @@
 """DB module
 """
 from sqlalchemy import create_engine
-from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.exc import InvalidRequestError, NoResultFound
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
@@ -31,7 +31,7 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, password: str) -> User:
+    def add_user(self, email: str, hashed_password: str) -> User:
         """
         Add new user
         :param email: Unique User's email
@@ -41,10 +41,24 @@ class DB:
         :return: User object
         :rtype: User
         """
-        new_user = User(email=f"{email}", hashed_password=f"{password}")
-        self._session.add(new_user)
-        self.save()
-        return new_user
+        if not email or not hashed_password:
+            return None
+        new_user = User(email=f"{email}", hashed_password=f"{hashed_password}")
+        # Before adding new user verify that user does not already exist
+        try:
+            # Raises ``sqlalchemy.orm.exc.NoResultFound`` if the query selects
+            #         no rows.
+            result = self.find_user_by(email=email)
+        except NoResultFound as e:
+            # User Does not already exist therefore it's safe to add
+            self._session.add(new_user)
+            self.save()
+            return new_user
+        else:
+            # Reject User Creation as perhaps user already exists or
+            # other exception occurred.
+            # raise ValueError(f"User {result.email} already exists")
+            return result
 
     def save(self) -> None:
         """
@@ -71,7 +85,8 @@ class DB:
             result = self._session.query(User).filter(
                 getattr(User, key) == kwargs.get(f'{key}')).one()
             # elif key == 'id':
-            #     result = self._session.query(User).filter(User.id == kwargs.get(f'{key}')).one()
+            #   result = self._session.query(User).filter(User.id ==
+            # kwargs.get(f'{key}')).one()
         else:
             raise InvalidRequestError
 
