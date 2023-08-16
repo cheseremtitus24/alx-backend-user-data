@@ -97,8 +97,7 @@ class DB:
         user_keys = set(User.__dict__.keys())
         update_keys = set(kwargs.keys())
         if not update_keys.issubset(user_keys):
-            raise InvalidRequestError(
-                "One or more keys in kwargs are not valid attributes of User.")
+            raise InvalidRequestError()
 
         # Update with new values
         for key, value in kwargs.items():
