@@ -217,7 +217,7 @@ def update_password():
     if new_password is None:
         abort(400, 'Missing new_password')
     try:
-        update_result = AUTH.update_password(
+        AUTH.update_password(
             reset_token=reset_token, password=new_password)
         data = {"email": f"{email}", "message": "Password updated"}
     except ValueError as e:
