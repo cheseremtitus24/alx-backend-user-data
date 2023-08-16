@@ -2,7 +2,7 @@
 """DB module
 """
 from sqlalchemy import create_engine
-from sqlalchemy.exc import InvalidRequestError, NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
@@ -90,22 +90,19 @@ class DB:
         """
         try:
             find_user = self.find_user_by(id=user_id)
-        except NoResultFound as e:
-            raise ValueError("User Not Found")
-        else:
+        except BaseException:
+            raise ValueError()
 
-            # Check if all keys in kwargs are in the class dictionary
-            user_keys = set(User.__dict__.keys())
-            update_keys = set(kwargs.keys())
-            if not update_keys.issubset(user_keys):
-                raise InvalidRequestError(
-                    "One or more keys in kwargs are not"
-                    " valid attributes of User.")
+        # Check if all keys in kwargs are in the class dictionary
+        user_keys = set(User.__dict__.keys())
+        update_keys = set(kwargs.keys())
+        if not update_keys.issubset(user_keys):
+            raise InvalidRequestError(
+                "One or more keys in kwargs are not valid attributes of User.")
 
-            # Update with new values
-            for key, value in kwargs.items():
-                setattr(find_user, key, value)
+        # Update with new values
+        for key, value in kwargs.items():
+            setattr(find_user, key, value)
 
-            self.save()
-
+        self.save()
         return None
