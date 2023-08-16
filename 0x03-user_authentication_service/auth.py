@@ -8,6 +8,8 @@ handling using a primitive cookie setting.
 requires bcrypt installed with :
 pip install bcrypt
 """
+import base64
+import binascii
 import uuid
 import bcrypt
 from sqlalchemy.exc import NoResultFound
@@ -15,7 +17,7 @@ from db import DB
 from user import User
 
 
-def _hash_password(password: str) -> str:
+def _hash_password(password: str) -> bytes:
     """
     Securely Hashes a Plain text password
     :param password: password to be hashed
@@ -60,6 +62,7 @@ class Auth:
             # Raises ``sqlalchemy.orm.exc.NoResultFound`` if the query selects
             #         no rows.
             result = self._db.find_user_by(email=email)
+            raise ValueError(f"User {email} already exists")
         except NoResultFound as e:
             # Clear to register a new User
             # hash their password
@@ -69,10 +72,7 @@ class Auth:
             # print(type(string_hashed_password))
             new_user = self._db.add_user(email, string_hashed_password)
             return new_user
-        else:
-            # Reject User Creation as perhaps user already exists or
-            # other exception occurred.
-            raise ValueError(f"User {email} already exists")
+
 
     def valid_login(self, email: str, password: str) -> bool:
         """
