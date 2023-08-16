@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """DB module
 """
 from sqlalchemy import create_engine
@@ -71,7 +71,8 @@ class DB:
             result = self._session.query(User).filter(
                 getattr(User, key) == kwargs.get(f'{key}')).one()
             # elif key == 'id':
-            #     result = self._session.query(User).filter(User.id == kwargs.get(f'{key}')).one()
+            # result = self._session.query(User).filter(User.id ==
+            # kwargs.get(f'{key}')).one()
         else:
             raise InvalidRequestError
 
