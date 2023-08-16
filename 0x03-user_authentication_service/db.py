@@ -53,10 +53,6 @@ class DB:
             # User Does not already exist therefore it's safe to add
             self._session.add(new_user)
             self.save()
-        else:
-            # Reject User Creation as perhaps user already exists or
-            # other exception occurred.
-            raise ValueError(f"User {email} already exists")
         finally:
             return new_user
 
