@@ -101,4 +101,3 @@ class DB:
             setattr(find_user, key, value)
 
         self.save()
-        return None

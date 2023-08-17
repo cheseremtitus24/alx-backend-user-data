@@ -99,9 +99,11 @@ class Auth:
             # print(type(stored_hashed_password))
             hashed_password_as_bytes = stored_hashed_password.encode('utf-8')
             # print(type(hashed_password_as_bytes))
-            if bcrypt.checkpw(
-                    password.encode('utf-8'),
-                    hashed_password_as_bytes):
+            comp_result = bcrypt.checkpw(
+                password.encode('utf-8'),
+                hashed_password_as_bytes)
+            # print("Comparison Result ", comp_result)
+            if comp_result:
                 retval = True
                 return retval
             else:
@@ -135,7 +137,7 @@ class Auth:
                 session_id = _generate_uuid()
                 self._db.update_user(result.id, session_id=session_id)
             except ValueError as e:
-                return session_id
+                return None
         return session_id
 
     def get_user_from_session_id(self, session_id):
@@ -232,11 +234,12 @@ class Auth:
         """
         if not reset_token or not password:
             # Handle case when reset_token or password is  None
-            raise ValueError()
+            return None
         try:
             # Raises ``sqlalchemy.orm.exc.NoResultFound`` if the query selects
             #         no rows.
             result = self._db.find_user_by(reset_token=reset_token)
+            # print(result)
         except NoResultFound as e:
             # User not found
             raise ValueError("reset_token not found")
@@ -244,6 +247,10 @@ class Auth:
             # User Object found
             hashed_password = _hash_password(password)
             # Update user's hashed password
-            self._db.update_user(result.id, password=hashed_password)
+            # print(result)
+            self._db.update_user(
+                user_id=result.id,
+                hashed_password=hashed_password)
+            # print(result)
             # set reset_token to None
-            self._db.update_user(result.id, reset_token=None)
+            self._db.update_user(user_id=result.id, reset_token=None)

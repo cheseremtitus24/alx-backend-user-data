@@ -53,7 +53,7 @@ def add_user():
         # print("could not create a new user: {}".format(err))
     else:
         data = {"email": f"{email}", "message": "user created"}
-        return jsonify(data), 201
+        return jsonify(data), 200
 
 
 @app.route('/sessions', methods=['POST'])
@@ -85,13 +85,13 @@ def login():
             # Failed to Authenticate
             abort(401)
     except BaseException as e:
-        abort(500)
+        abort(401)
         # print("could not create a new user: {}".format(err))
     else:
         # nothing went wrong: Lets set the cookie in the response
         if session_id:
             data = {"email": f"{email}", "message": "logged in"}
-            resp = make_response(jsonify(data))
+            resp = make_response(jsonify(data), 200)
             resp.set_cookie('session_id', f'{session_id}')
             return resp
 
@@ -166,9 +166,8 @@ def reset_password():
 
     Sets a reset cookie and displays it in the response
 
-   curl -XPOST localhost:5000/sessions -d 'email=bob@bob.com'
-    -d 'password=mySuperPwd' -v
-    -- sets cookie and prints it.
+   curl -XPOST localhost:5000/reset_password -d
+    'email=bob@bob.com'
     {"email": f"{email}", "reset_token": f"{reset_token}"}
 
     :return: json
@@ -180,17 +179,17 @@ def reset_password():
     if email is None:
         abort(400, 'Missing email')
     valid_session = AUTH.create_session(email)
-    if valid_session is None:
-        # email is not registered therefore abort
-        abort(403)
-    else:
+    # print("Is a valid session ", valid_session)
+
+    if valid_session:
+        # email is registered therefore
         # generate token
         reset_token = AUTH.get_reset_password_token(email)
         if reset_token:
             data = {"email": f"{email}", "reset_token": f"{reset_token}"}
         else:
             abort(500, "Failed to generate reset token")
-    return jsonify(data)
+    return jsonify(data), 200
 
 
 @app.route('/reset_password', methods=['PUT'])
@@ -220,7 +219,7 @@ def update_password():
         AUTH.update_password(
             reset_token=reset_token, password=new_password)
         data = {"email": f"{email}", "message": "Password updated"}
-    except ValueError as e:
+    except Exception as e:
         # reset token not found
         abort(403)
     else:
